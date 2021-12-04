@@ -44,23 +44,23 @@ int main(void)
 
 	const float step_size = (grid_max - grid_min) / (res - 1);
 
-	octonion C;
+	quintonion C;
 	C.vertex_data[0] = 0.3f;
 	C.vertex_data[1] = 0.5f;
 	C.vertex_data[2] = 0.4f;
 	C.vertex_data[3] = 0.2f;
 	C.vertex_data[4] = 0.1f;
-	C.vertex_data[5] = 0.0f;
-	C.vertex_data[6] = 0.0f;
-	C.vertex_data[7] = 0.0f;
 
-	octonion Z;
+	quintonion Z;
 
 	for (size_t i = 0; i < 3; i++)
 		Z.vertex_data[i] = grid_min;
 
-	// Do slice of 8D set
-	const float slice_val = 0.6f;
+	// Do slice of 5D set
+
+	// range from 0 to 0.6 or so
+	float slice_val = 0.45f;
+
 
 	size_t z = 0;
 
@@ -71,15 +71,16 @@ int main(void)
 
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
-//			if (z > res / 2)
-//				xyplane0[x * res + y] = border_value;
-//			else
-//			{
+
+			if (0)//z > res / 2)
+				xyplane0[x * res + y] = border_value;
+			else
+			{
 				if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
 					xyplane0[x * res + y] = border_value;
 				else
 					xyplane0[x * res + y] = iterate(Z, C, slice_val, max_iterations, threshold);
-//			}
+			}
 		}
 	}
 
@@ -101,15 +102,15 @@ int main(void)
 			for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 			{
 
-//				if (z > res / 2)
-//					xyplane1[x * res + y] = border_value;
-//				else
-//				{
+				if (0)//z > res / 2)
+					xyplane1[x * res + y] = border_value;
+				else
+				{
 					if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
 						xyplane1[x * res + y] = border_value;
 					else
 						xyplane1[x * res + y] = iterate(Z, C, slice_val, max_iterations, threshold);
-//				}
+				}
 			}
 		}
 

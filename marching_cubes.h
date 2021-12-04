@@ -41,70 +41,9 @@ namespace marching_cubes
 		float value[8];
 	};
 
-
-	class octonion
-	{
-	public:
-		inline octonion(void)
-		{
-			for (size_t i = 0; i < 8; i++)
-				vertex_data[i] = 0;
-		}
-
-		float magnitude(void)
-		{
-			float result = 0;
-
-			for (size_t i = 0; i < 8; i++)
-				result += vertex_data[i] * vertex_data[i];
-
-			return sqrtf(result);
-		}
-
-
-		octonion operator+(const octonion& rhs)
-		{
-			octonion result;
-
-			for (size_t i = 0; i < 8; i++)
-				result.vertex_data[i] = vertex_data[i] + rhs.vertex_data[i];
-
-			return result;
-		}
-
-		inline octonion(
-			float src_r,
-			float src_i,
-			float src_j,
-			float src_k,
-			float src_u1,
-			float src_i1,
-			float src_j1,
-			float src_k1)
-		{
-			vertex_data[0] = src_r;
-			vertex_data[1] = src_i;
-			vertex_data[2] = src_j;
-			vertex_data[3] = src_k;
-			vertex_data[4] = src_u1;
-			vertex_data[5] = src_i1;
-			vertex_data[6] = src_j1;
-			vertex_data[7] = src_k1;
-		}
-
-		float vertex_data[8];
-	};
-
-	octonion mul(const octonion& qA, const octonion& qB);
-
-
-	vertex_3 vertex_interp(const float isovalue, vertex_3 p1, vertex_3 p2, float valp1, float valp2);
-	short unsigned int tesselate_grid_cube(octonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, const grid_cube& grid, triangle* const triangles);
-	void tesselate_adjacent_xy_plane_pair(octonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, vector<float> xyplane0, vector<float> xyplane1, const size_t z, vector<triangle> &triangles, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res);
-
-
-	octonion sin(const octonion& in);
-
+//	vertex_3 vertex_interp(const float isovalue, vertex_3 p1, vertex_3 p2, float valp1, float valp2);
+	short unsigned int tesselate_grid_cube(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, const grid_cube& grid, triangle* const triangles);
+	void tesselate_adjacent_xy_plane_pair(quintonion C, float z_w, const float isovalue, const float upper_threshold, const float lower_threshold, short unsigned int max_iterations, vector<float> xyplane0, vector<float> xyplane1, const size_t z, vector<triangle> &triangles, const float x_grid_min, const float x_grid_max, const size_t x_res, const float y_grid_min, const float y_grid_max, const size_t y_res, const float z_grid_min, const float z_grid_max, const size_t z_res);
 
 
 	quintonion sin(const quintonion& in);
@@ -126,14 +65,72 @@ namespace marching_cubes
 
 
 	inline float iterate(
-		octonion Z,
-		octonion C,
+		quintonion Z,
+		quintonion C,
 		float z_w,
 		const short unsigned int max_iterations,
-		const float threshold);
+		const float threshold)
+	{
+		Z.vertex_data[3] = z_w;
+		Z.vertex_data[4] = z_w;
+
+		for (short unsigned int i = 0; i < max_iterations; i++)
+		{
+			//quintonion Z_orig = Z;
+
+			quintonion Z_base = Z;
+			Z = mul(Z, Z_base);
+			Z = mul(Z, Z_base);
+			Z = mul(Z, Z_base);
+
+			Z = Z + C;
+
+
+		//	Z = pow_number_type(Z_orig, 2.0) + C;
+
+
+
+
+		//	Z = sin(Z) + mul(sin(Z), C);
+
+
+	/*		quaternion qc;
+			qc.x = C.vertex_data[0];
+			qc.y = C.vertex_data[1];
+			qc.z = C.vertex_data[2];
+			qc.w = C.vertex_data[3];
+
+			quintonion s = sin(Z);
+
+			quaternion qs;
+			qs.x = s.vertex_data[0];
+			qs.y = s.vertex_data[1];
+			qs.z = s.vertex_data[2];
+			qs.w = s.vertex_data[3];
+
+			quaternion f = traditional_mul(qc, qs);
+
+			f.x += qs.x;
+			f.y += qs.y;
+			f.z += qs.z;
+			f.w += qs.w;
+
+			Z.vertex_data[0] = f.x;
+			Z.vertex_data[1] = f.y;
+			Z.vertex_data[2] = f.z;
+			Z.vertex_data[3] = f.w;
+			Z.vertex_data[4] = 0;*/
+
+
+			if (Z.magnitude() >= threshold)
+				break;
+		}
+
+		return Z.magnitude();
+	}
 
 	vertex_3 vertex_interp_refine(
-		octonion C,
+		quintonion C,
 		float z_w,
 		float isovalue,
 		float upper_threshold,
