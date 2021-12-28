@@ -14,9 +14,9 @@ int main(void)
 
 	f.first = 4.0f;
 	f.second = 0.0f;
-	thresholds.push_back(f);
+	//thresholds.push_back(f);
 
-	//f.first = 1.95f;
+	//f.first = 0.95f;
 	//f.second = 0.55f;
 	//thresholds.push_back(f);
 
@@ -44,23 +44,23 @@ int main(void)
 
 	const float step_size = (grid_max - grid_min) / (res - 1);
 
-	quintonion C;
+	octonion C;
 	C.vertex_data[0] = 0.3f;
 	C.vertex_data[1] = 0.5f;
 	C.vertex_data[2] = 0.4f;
 	C.vertex_data[3] = 0.2f;
 	C.vertex_data[4] = 0.1f;
+	C.vertex_data[5] = 0.0f;
+	C.vertex_data[6] = 0.0f;
+	C.vertex_data[7] = 0.0f;
 
-	quintonion Z;
+	octonion Z;
 
 	for (size_t i = 0; i < 3; i++)
 		Z.vertex_data[i] = grid_min;
 
-	// Do slice of 5D set
-
-	// range from 0 to 0.6 or so
-	float slice_val = 0.45f;
-
+	// Do slice of 8D set
+	const float slice_val = 0.45f;
 
 	size_t z = 0;
 
@@ -71,7 +71,6 @@ int main(void)
 
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
-
 			if (0)//z > res / 2)
 				xyplane0[x * res + y] = border_value;
 			else
