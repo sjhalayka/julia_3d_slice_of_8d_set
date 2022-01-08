@@ -992,11 +992,11 @@ float marching_cubes::iterate(
 		Z = trad_mul(Z, Z_base);
 		Z = truncate(Z);
 
-		//Z = mul(Z, Z_base);
-		//Z = truncate(Z);
+		Z = mul(Z, Z_base);
+		Z = truncate(Z);
 
-		//Z = mul(Z, Z_base);
-		//Z = truncate(Z);
+		Z = mul(Z, Z_base);
+		Z = truncate(Z);
 
 		Z = Z + C;
 		Z = truncate(Z);

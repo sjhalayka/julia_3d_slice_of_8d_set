@@ -14,7 +14,7 @@ int main(void)
 
 	f.first = 4.0f;
 	f.second = 0.0f;
-	//thresholds.push_back(f);
+	thresholds.push_back(f);
 
 	//f.first = 0.95f;
 	//f.second = 0.55f;
@@ -60,7 +60,7 @@ int main(void)
 		Z.vertex_data[i] = grid_min;
 
 	// Do slice of 8D set
-	const float slice_val = 0.45f;
+	const float slice_val = 0.0f;
 
 	size_t z = 0;
 
@@ -71,15 +71,10 @@ int main(void)
 
 		for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 		{
-			if (0)//z > res / 2)
-				xyplane0[x * res + y] = border_value;
-			else
-			{
 				if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
 					xyplane0[x * res + y] = border_value;
 				else
 					xyplane0[x * res + y] = iterate(Z, C, slice_val, max_iterations, threshold);
-			}
 		}
 	}
 
@@ -100,16 +95,10 @@ int main(void)
 
 			for (size_t y = 0; y < res; y++, Z.vertex_data[1] += step_size)
 			{
-
-				if (0)//z > res / 2)
-					xyplane1[x * res + y] = border_value;
-				else
-				{
 					if (true == make_border && (x == 0 || y == 0 || z == 0 || x == res - 1 || y == res - 1 || z == res - 1))
 						xyplane1[x * res + y] = border_value;
 					else
 						xyplane1[x * res + y] = iterate(Z, C, slice_val, max_iterations, threshold);
-				}
 			}
 		}
 
